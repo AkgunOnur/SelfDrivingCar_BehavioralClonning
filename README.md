@@ -76,6 +76,95 @@ At the end of the process, the car is driven autonomously by the model.h5 file a
 #### 2. Final Model Architecture
 
 The final model architecture consists of a layers and layer sizes
+
+<table>
+  <tr>
+    <td>Layer</td>
+    <td>Description</td>
+  </tr>
+  <tr>
+    <td>Input</td>
+    <td>160x320x3 RGB image</td>
+  </tr>
+  <tr>
+    <td>Lambda</td>
+    <td>Each image is normalized between -0.5 and 0.5</td>
+  </tr>
+  <tr>
+    <td>Cropping2D</td>
+    <td>Region of interest is extracted for each image, output: 65x320x3</td>
+  </tr>
+  <tr>
+    <td>Convolution 5x5x24</td>
+    <td>2x2 stride, valid padding, output: 31x158x24</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Convolution 5x5x36</td>
+    <td>2x2 stride, valid padding, output: 14x77x36</td>
+  </tr>
+  <tr>
+    <td>Convolution 5x5x48</td>
+    <td>2x2 stride, valid padding, output: 5x37x48</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Convolution 3x3x64</td>
+    <td>2x2 stride, valid padding, output: 1x33x64</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Dropout</td>
+    <td>keep_prob: 0.7</td>
+  </tr>
+  <tr>
+    <td>Fully connected</td>
+    <td>(1x33x64,1164) sized layer</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Hidden layer</td>
+    <td>(1164x100) sized layer</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Hidden layer</td>
+    <td>(100x50) sized layer</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Hidden layer</td>
+    <td>(50x10) sized layer</td>
+  </tr>
+  <tr>
+    <td>RELU</td>
+    <td>Activation method: Rectified Linear Unit</td>
+  </tr>
+  <tr>
+    <td>Output layer</td>
+    <td>(10x1) sized layer</td>
+  </tr>
+</table>
+
+
 | Layer         		|     Description	        					| 
 |:-----------------:|:-----------------------------------------------------------------------:| 
 | Input         		| 160x320x3 RGB image   							| 
