@@ -77,7 +77,7 @@ At the end of the process, the car is driven autonomously by the model.h5 file a
 
 The final model architecture consists of a layers and layer sizes
 | Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
+|:-----------------:|:-----------------------------------------------------------------------:| 
 | Input         		| 160x320x3 RGB image   							| 
 | Lambda    	| Each image is normalized between -0.5 and 0.5 	|
 | Cropping2D    	| Region of interest is extracted for each image, output: 65x320x3|
