@@ -65,7 +65,7 @@ For details about what kind processes are executed, see the next section.
 
 #### 1. Solution Design Approach
 
-The very first important part of this study is to organize data used in the model. In order to create a model that actually works left, right and center images are added to the dataset. Data is augmented by rotating, translating and adding brightness the actual images so that the whole set is more balanced. 
+The very first important part of this study is to organize data used in the model. In order to create a model that actually works left, right and center images are added to the dataset. Correction factor is added to the steering angle of left image and it is subtracted for right image. Data is augmented by rotating, translating and adding brightness the actual images so that the whole set is more balanced. 
 
 In second step, Nvidia Self Driving Car architecture, which is described in section 1, is introduced. Because it actually gives better results than other models. 
 
