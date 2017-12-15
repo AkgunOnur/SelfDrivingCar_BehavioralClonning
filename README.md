@@ -18,6 +18,9 @@ The goals / steps of this project are the following:
 [image4]: ./examples/center_augment.png "Distortion applied on the image"
 [image5]: ./examples/left.png "Image from left camera"
 [image6]: ./examples/right.png "Image from right camera"
+[image7]: ./examples/hist.png "Frequency of the steering angles"
+[image8]: ./examples/left_augment.png "Distorted left image"
+[image9]: ./examples/right_augment.png "Distorted right image"
 
 ---
 ### Files Submitted & Code Quality
@@ -26,7 +29,7 @@ The goals / steps of this project are the following:
 
 My project includes the following files:
 * behavioral_cloning.ipynb containing the script to create and train the model
-* drive.py for driving the car in autonomous mode
+* Behavioral Cloning Project.ipynb for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
 * writeup_report.md or writeup_report.pdf summarizing the results
 
@@ -46,12 +49,12 @@ behavioral_cloning.ipynb file contains the code for training and saving the conv
 
 #### 1. An appropriate model architecture has been employed
 
-The model consists of a convolution neural network with 5 convolution layers and 5 flattened layers. Convolutional layers are 5x5x24, 5x5x36, 5x5x48, 3x3x64 and 3x3x64 sized filters. Flattened layers have 1164, 100, 50, 10, 1 nodes respectively. In first step, image data is normalized by Keras lambda layer. Afterwards, region of interest is extracted by Keras Cropping2D layer. In each layer, ReLu activation function is used to introduce nonlinearity in the model. 
+The model consists of a convolution neural network with 5 convolution layers and 4 flattened layers. Convolutional layers are 5x5x24, 5x5x36, 5x5x48, 3x3x64 and 3x3x64 sized filters. Flattened layers have 100, 50, 10, 1 nodes respectively. In first step, image data is normalized by Keras lambda layer. Afterwards, region of interest is extracted by Keras Cropping2D layer. In each layer, ReLu activation function is used to introduce nonlinearity in the model. 
 
 #### 2. Attempts to reduce overfitting in the model
 
 One of the indications of overfitting is to have very low loss value in training set and high loss value in validation set. 
-The dropout layer is added after convolutional layers in order to reduce overfitting. According to the obtained results, dropout coefficient and where the regularization process will be executed is found. 
+The dropout layer is added after each hidden layer in order to reduce overfitting. According to the obtained results, dropout coefficient and where the regularization process will be executed is found. 
 
 #### 3. Model parameter tuning
 
@@ -67,11 +70,11 @@ For details about what kind processes are executed, see the next section.
 
 #### 1. Solution Design Approach
 
-The very first important part of this study is to organize data used in the model. In order to create a model that actually works left, right and center images are added to the dataset. Correction factor is added to the steering angle of left image and it is subtracted for right image. Data is augmented by rotating, translating and adding brightness the actual images so that the whole set is more balanced. 
+The very first important part of this study is to organize data used in the model. To get a model that correctly works, one needs to have a balanced dataset. Otherwise, the car will not complete the track regardless of the model. In order to have a balanced dataset, augmented images are added. Data augmentation process includes rotation, translation, shearing and addition of brightness. Correction factor is added to the steering angle of left image and it is subtracted for right image. 
 
-In second step, Nvidia Self Driving Car architecture, which is described in section 1, is introduced. Because it actually gives better results than other models. 
+In second step, Nvidia Self Driving Car architecture[1], which is described in section 1, is introduced. Creating a model from the scratch may not give always best results. Therefore, pre-trained models such as Alexnet, GoogLenet VGG etc. or model structures which gave better results before are preferred. 
 
-Despite the fact that everything looks working and low loss values are obtained, the car could not complete the track. In order to fix this problem, the instances, whose steering angle is zero, are eliminated. By this means, the car completed the track successfully although the loss value obtained is bigger than before. 
+According to a more recent research [2], using dropout layers after both convolutional and hidden layers may be useful. Therefore, after each convolution process, dropout layer, whose coefficient to drop is relatively small, is added. After each hidden unit dropout layer whose coefficient to drop is 0.5, is added 
 
 At the end of the process, the car is driven autonomously by the model.h5 file and it is recorded to the output.mp4 file. 
 
@@ -87,23 +90,28 @@ The final model architecture consists of a layers and layer sizes
 | Cropping2D    	| Region of interest is extracted for each image, output: 65x320x3|
 | Convolution 5x5x24     	| 2x2 stride, valid padding, output: 31x158x24 	|
 | RELU					|	Activation method: Rectified Linear Unit    |
+| Dropout			| probability: 0.1 	|
 | Convolution 5x5x36	    | 2x2 stride, valid padding, output: 14x77x36    |
 | RELU          | Activation method: Rectified Linear Unit     |
+| Dropout			| probability: 0.1 	|
 | Convolution 5x5x48     	| 2x2 stride, valid padding, output: 5x37x48 	|
 | RELU					|	Activation method: Rectified Linear Unit    |
+| Dropout			| probability: 0.1 	|
 | Convolution 3x3x64	    | 2x2 stride, valid padding, output: 3x35x64    |
 | RELU          | Activation method: Rectified Linear Unit     |
+| Dropout			| probability: 0.1 	|
 | Convolution 3x3x64	    | 2x2 stride, valid padding, output: 1x33x64    |
 | RELU          | Activation method: Rectified Linear Unit     |
-| Dropout			| keep_prob: 0.7 	|
-| Fully connected		| (1x33x64,1164) sized layer 	|
+| Dropout			| probability: 0.1 	|
+| Fully connected		| (1x33x64,100) sized layer 	|
 | RELU				| Activation method: Rectified Linear Unit 	|
-|	Hidden layer | (1164x100) sized layer   	|
-| RELU				| Activation method: Rectified Linear Unit 	|
+| Dropout			| probability: 0.5 	|
 |	Hidden layer | (100x50) sized layer   	|
 | RELU				| Activation method: Rectified Linear Unit 	|
+| Dropout			| probability: 0.5 	|
 |	Hidden layer | (50x10) sized layer   	|
 | RELU				| Activation method: Rectified Linear Unit 	|
+| Dropout			| probability: 0.5 	|
 |	Output layer |	(10x1) sized layer	|
 
 Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
@@ -112,22 +120,32 @@ Here is a visualization of the architecture (note: visualizing the architecture 
 
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, firstly images from center camera are obtained. 
+To capture good driving behavior, firstly images from all cameras, whose steering angles are not zero, are obtained. 
 
 ![alt text][image2]
-
-The instances,whose steering angle is not zero, are only considered. To have a large amount of data, images from left and right cameras are added to the dataset and the new images are obtained by distorting the actual ones. 
-
 ![alt text][image5]
 ![alt text][image6]
+
+To have a larger and more balanced dataset, distorted images from left and right cameras are added to the dataset
+
 ![alt text][image4]
+![alt text][image8]
+![alt text][image9]
 
 To double up the dataset, each image is flipped horizontally.
 
+![alt text][image7]
+
+At the end of this process, the histogram of the steering angle is like below:
+
 ![alt text][image3]
 
-After the collection process, there are 22050 number of data points. Then, the data is normalized between -0.5 and 0.5. Region of interest is obtained by Keras, Cropping2D
+After the collection process, there are 28360 number of data points. Then, the data is normalized between -0.5 and 0.5 by Keras Lambda layer. Region of interest is obtained by Keras, Cropping2D layer
 
 During the training process, data is shuffled and split as 80% of which is training set and the rest of which is validation set. 
 
 Because adam optimizer is used, there is no need to tune the learning rate. Training process is executed 5 epochs
+
+### References
+[1] NVIDIA, "End to End Learning for Self-Driving Cars", 25-04-2016
+[2] Sungheon Park and Nojun Kwak, "Analysis on the Dropout Effect in Convolutional Neural Networks", Asian Conference on Computer Vision, 2016
