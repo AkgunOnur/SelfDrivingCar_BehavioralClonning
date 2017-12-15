@@ -134,11 +134,11 @@ To have a larger and more balanced dataset, distorted images from left and right
 
 To double up the dataset, each image is flipped horizontally.
 
-![alt text][image7]
+![alt text][image3]
 
 At the end of this process, the histogram of the steering angle is like below:
 
-![alt text][image3]
+![alt text][image7]
 
 After the collection process, there are 28360 number of data points. Then, the data is normalized between -0.5 and 0.5 by Keras Lambda layer. Region of interest is obtained by Keras, Cropping2D layer
 
@@ -148,4 +148,5 @@ Because adam optimizer is used, there is no need to tune the learning rate. Trai
 
 ### References
 [1] NVIDIA, "End to End Learning for Self-Driving Cars", 25-04-2016
+
 [2] Sungheon Park and Nojun Kwak, "Analysis on the Dropout Effect in Convolutional Neural Networks", Asian Conference on Computer Vision, 2016
